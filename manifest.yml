@@ -53,7 +53,7 @@ oauth_config:
 settings:
   interactivity:
     is_enabled: true
-    request_url: https://ed57-197-210-227-193.ngrok.io/messages # e.g. https://bot.herokuapp.com/messages
+    request_url: https://ed57-197-210-227-193.ngrok.io/response # e.g. https://bot.herokuapp.com/messages
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
