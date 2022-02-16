@@ -40,13 +40,6 @@ class ResponseHandlers {
                     callback_id: "hobby_selection",
                     actions: [
                         {
-                          "type": "section",
-                          "block_id": "section678",
-                          "text": {
-                            "type": "mrkdwn",
-                            "text": "Pick items from the list"
-                          },
-                          "accessory": {
                             "action_id": "text1234",
                             "type": "multi_static_select",
                             "placeholder": {
@@ -76,7 +69,6 @@ class ResponseHandlers {
                                 "value": "value-2"
                               }
                             ]
-                          }
                         }
                     ]
                     // actions: [
