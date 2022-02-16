@@ -16,7 +16,7 @@ const web = new WebClient(process.env.SLACK_BOT_TOKEN)
 mongoConnection()
 
 app.use(express.urlencoded({ extended: true}))
-app.use(pinoLogger)
+// app.use(pinoLogger)
 
 app.get('/', async (req, res) => {
     try {
@@ -102,6 +102,27 @@ app.post('/messages', async (req, res) => {
     web.chat.postMessage(userMoodMenuQuestion);
     
     res.end()
+})
+
+app.get('/response/:userName', async (req, res) => {
+    const user = await ResponseModel.findOne({ userName: req.params.userName }).exec()
+
+    res.status(200).json({
+        status: 200,
+        data:{
+            response: [
+                {
+                    question: 'How are you feeling',
+                    answer: user.mood
+                },
+                {
+                    question: 'What are your favorite hobbies?',
+                    answer: user.hobby
+                },
+            ]
+        }
+    })
+
 })
 
 app.listen(port, () => console.log('App Server running on port: ', port))
