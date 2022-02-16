@@ -19,22 +19,14 @@ app.use(express.urlencoded({ extended: true}))
 app.use(pinoLogger)
 
 app.get('/', async (req, res) => {
-    try {
-        const response = new ResponseModel({ userId: '123', userName: 'prosper', mood: 'happy', hobby: 'sleep' })
-
-        await response.save()
-        res.end('Welcome to the Seren bot');
-    } catch (error) {
-        logger.error({ message: error.message })
-        res.status(400).json({ status: 400, message: error.message })
-    }
+    res.end('Welcome to the Seren bot')
 })
 
 app.post('/respond', (req, res) => {
     const payload = JSON.parse(req.body.payload)
     const responseHandlers = new ResponseHandlers(web, payload)
 
-    switch(payload.callback_id) {
+    switch(payload.actions[0].action_id) {
         case CallbackTypes.USER_MOOD:
             responseHandlers.handleUserModeResponse().catch(error => logger.error({ message: 'Error', error }))
             return res.end()
@@ -65,33 +57,51 @@ app.post('/messages', async (req, res) => {
     const userMoodMenuQuestion = {
         channel: req.body.channel_id,
         text: "Welcome. How are you doing?",
-        response_type: "in_channel",
         attachments: [
             {
-                text: "Choose an option that reflects how your mood",
-                fallback: "If you could read this message, you'd be choosing something fun to do right now.",
-                color: "#3AA3E3",
-                attachment_type: "default",
-                callback_id: "user_mood",
-                actions: [
+                color: "#f2c744",
+                blocks: [
                     {
-                        name: "feeling_list",
-                        text: "How are you doing?",
-                        type: "select",
-                        options: [
-                            {
-                                "text": "Doing Well",
-                                "value": Mood.FEELING_WELL
+                        type: "section",
+                        text: {
+                            type: "mrkdwn",
+                            text: "Choose an option that reflects how your mood"
+                        },
+                        accessory: {
+                            type: "static_select",
+                            placeholder: {
+                                type: "plain_text",
+                                text: "Select mood",
+                                emoji: true
                             },
-                            {
-                                "text": "Neutral",
-                                "value": Mood.FEELING_NEUTRAL
-                            },
-                            {
-                                "text": "Feeling Lucky",
-                                "value": Mood.FEELING_LUCKY
-                            }
-                        ]
+                            options: [
+                                {
+                                    text: {
+                                        type: "plain_text",
+                                        text: Mood.FEELING_LUCKY,
+                                        emoji: true
+                                    },
+                                    value: Mood.FEELING_LUCKY
+                                },
+                                {
+                                    text: {
+                                        type: "plain_text",
+                                        text: Mood.FEELING_NEUTRAL,
+                                        emoji: true
+                                    },
+                                    value: Mood.FEELING_NEUTRAL
+                                },
+                                {
+                                    text: {
+                                        type: "plain_text",
+                                        text: Mood.FEELING_WELL,
+                                        emoji: true
+                                    },
+                                    value: Mood.FEELING_WELL
+                                }
+                            ],
+                            action_id: CallbackTypes.USER_MOOD
+                        }
                     }
                 ]
             }
@@ -102,6 +112,27 @@ app.post('/messages', async (req, res) => {
     web.chat.postMessage(userMoodMenuQuestion);
     
     res.end()
+})
+
+app.get('/response/:userName', async (req, res) => {
+    const user = await ResponseModel.findOne({ userName: req.params.userName }).exec()
+
+    res.status(200).json({
+        status: 200,
+        data:{
+            response: [
+                {
+                    question: 'How are you feeling',
+                    answer: user.mood
+                },
+                {
+                    question: 'What are your favorite hobbies?',
+                    answer: user.hobbies
+                },
+            ]
+        }
+    })
+
 })
 
 app.listen(port, () => console.log('App Server running on port: ', port))

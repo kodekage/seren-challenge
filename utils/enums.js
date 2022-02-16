@@ -7,9 +7,9 @@ const Hobby = {
 }
 
 const Mood = {
-    FEELING_WELL: 'feeling well',
-    FEELING_NEUTRAL: 'feeling neutral',
-    FEELING_LUCKY: 'feeling lucky'
+    FEELING_WELL: 'Doing Well',
+    FEELING_NEUTRAL: 'Neutral',
+    FEELING_LUCKY: 'Feeling Lucky'
 }
 
 const CallbackTypes = {
