@@ -33,83 +33,83 @@ class ResponseHandlers {
             response_type: "in_channel",
             attachments: [
                 {
-                  "type": "section",
-                  "block_id": "section678",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Pick items from the list"
-                  },
-                  "accessory": {
-                    "action_id": "text1234",
-                    "type": "multi_static_select",
-                    "placeholder": {
-                      "type": "plain_text",
-                      "text": "Select items"
-                    },
-                    "options": [
-                      {
-                        "text": {
-                          "type": "plain_text",
-                          "text": "*this is plain_text text*"
-                        },
-                        "value": "value-0"
-                      },
-                      {
-                        "text": {
-                          "type": "plain_text",
-                          "text": "*this is plain_text text*"
-                        },
-                        "value": "value-1"
-                      },
-                      {
-                        "text": {
-                          "type": "plain_text",
-                          "text": "*this is plain_text text*"
-                        },
-                        "value": "value-2"
-                      }
+                    text: "Choose your favorite hobby",
+                    fallback: "If you could read this message, you'd be choosing something fun to do right now.",
+                    color: "#3AA3E3",
+                    attachment_type: "default",
+                    callback_id: "hobby_selection",
+                    actions: [
+                        {
+                          "type": "section",
+                          "block_id": "section678",
+                          "text": {
+                            "type": "mrkdwn",
+                            "text": "Pick items from the list"
+                          },
+                          "accessory": {
+                            "action_id": "text1234",
+                            "type": "multi_static_select",
+                            "placeholder": {
+                              "type": "plain_text",
+                              "text": "Select items"
+                            },
+                            "options": [
+                              {
+                                "text": {
+                                  "type": "plain_text",
+                                  "text": "*this is plain_text text*"
+                                },
+                                "value": "value-0"
+                              },
+                              {
+                                "text": {
+                                  "type": "plain_text",
+                                  "text": "*this is plain_text text*"
+                                },
+                                "value": "value-1"
+                              },
+                              {
+                                "text": {
+                                  "type": "plain_text",
+                                  "text": "*this is plain_text text*"
+                                },
+                                "value": "value-2"
+                              }
+                            ]
+                          }
+                        }
                     ]
-                  }
+                    // actions: [
+                    //     {
+                    //         name: "hobby_list",
+                    //         text: "What is your favorite hobby?",
+                    //         type: "select",
+                    //         options: [
+                    //             {
+                    //                 "text": "Football",
+                    //                 "value": Hobby.FOOTBALL
+                    //             },
+                    //             {
+                    //                 "text": "Music",
+                    //                 "value": Hobby.MUSIC
+                    //             },
+                    //             {
+                    //                 "text": "Sleep",
+                    //                 "value": Hobby.SLEEP
+                    //             },
+                    //             {
+                    //                 "text": "Movies",
+                    //                 "value": Hobby.MOVIES
+                    //             },
+                    //             {
+                    //                 "text": "Basketball",
+                    //                 "value": Hobby.BASKETBALL
+                    //             }
+                    //         ]
+                    //     }
+                    // ]
                 }
             ]
-            // attachments: [
-            //     {
-            //         text: "Choose your favorite hobby",
-            //         fallback: "If you could read this message, you'd be choosing something fun to do right now.",
-            //         color: "#3AA3E3",
-            //         attachment_type: "default",
-            //         callback_id: "hobby_selection",
-            //         actions: [
-            //             {
-            //                 name: "hobby_list",
-            //                 text: "What is your favorite hobby?",
-            //                 type: "select",
-            //                 options: [
-            //                     {
-            //                         "text": "Football",
-            //                         "value": Hobby.FOOTBALL
-            //                     },
-            //                     {
-            //                         "text": "Music",
-            //                         "value": Hobby.MUSIC
-            //                     },
-            //                     {
-            //                         "text": "Sleep",
-            //                         "value": Hobby.SLEEP
-            //                     },
-            //                     {
-            //                         "text": "Movies",
-            //                         "value": Hobby.MOVIES
-            //                     },
-            //                     {
-            //                         "text": "Basketball",
-            //                         "value": Hobby.BASKETBALL
-            //                     }
-            //                 ]
-            //             }
-            //         ]
-            //     }
-            // ]
         }
         this.logger.info({ message: 'User Hobby Menu Questions', userFavoriteHobbiesMessageMenuQuestion })
 
