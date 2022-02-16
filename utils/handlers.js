@@ -30,47 +30,91 @@ class ResponseHandlers {
         const userFavoriteHobbiesMessageMenuQuestion = {
             channel: this.payload.channel.id,
             text: "What are your favorite hobbies?",
-            response_type: "in_channel",
-            attachments: [
+            "blocks": [
                 {
-                    text: "Choose your favorite hobby",
-                    fallback: "If you could read this message, you'd be choosing something fun to do right now.",
-                    color: "#3AA3E3",
-                    attachment_type: "default",
-                    callback_id: "hobby_selection",
-                    actions: [
-                        {
-                            "action_id": "text1234",
-                            "type": "multi_static_select",
-                            "placeholder": {
-                              "type": "plain_text",
-                              "text": "Select items"
-                            },
-                            "options": [
-                              {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "Test block with multi static select"
+                    },
+                    "accessory": {
+                        "type": "multi_static_select",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Select options",
+                            "emoji": true
+                        },
+                        "options": [
+                            {
                                 "text": {
-                                  "type": "plain_text",
-                                  "text": "*this is plain_text text*"
+                                    "type": "plain_text",
+                                    "text": "*this is plain_text text*",
+                                    "emoji": true
                                 },
                                 "value": "value-0"
-                              },
-                              {
+                            },
+                            {
                                 "text": {
-                                  "type": "plain_text",
-                                  "text": "*this is plain_text text*"
+                                    "type": "plain_text",
+                                    "text": "*this is plain_text text*",
+                                    "emoji": true
                                 },
                                 "value": "value-1"
-                              },
-                              {
+                            },
+                            {
                                 "text": {
-                                  "type": "plain_text",
-                                  "text": "*this is plain_text text*"
+                                    "type": "plain_text",
+                                    "text": "*this is plain_text text*",
+                                    "emoji": true
                                 },
                                 "value": "value-2"
-                              }
-                            ]
-                        }
-                    ]
+                            }
+                        ],
+                        "action_id": "multi_static_select-action"
+                    }
+                }
+            ]
+            // response_type: "in_channel",
+            // attachments: [
+            //     {
+            //         text: "Choose your favorite hobby",
+            //         fallback: "If you could read this message, you'd be choosing something fun to do right now.",
+            //         color: "#3AA3E3",
+            //         attachment_type: "default",
+            //         callback_id: "hobby_selection",
+            //         actions: [
+            //             {
+            //                 "action_id": "text1234",
+            //                 "type": "multi_static_select",
+            //                 "placeholder": {
+            //                   "type": "plain_text",
+            //                   "text": "Select items"
+            //                 },
+            //                 "options": [
+            //                   {
+            //                     "text": {
+            //                       "type": "plain_text",
+            //                       "text": "*this is plain_text text*"
+            //                     },
+            //                     "value": "value-0"
+            //                   },
+            //                   {
+            //                     "text": {
+            //                       "type": "plain_text",
+            //                       "text": "*this is plain_text text*"
+            //                     },
+            //                     "value": "value-1"
+            //                   },
+            //                   {
+            //                     "text": {
+            //                       "type": "plain_text",
+            //                       "text": "*this is plain_text text*"
+            //                     },
+            //                     "value": "value-2"
+            //                   }
+            //                 ]
+            //             }
+            //         ]
                     // actions: [
                     //     {
                     //         name: "hobby_list",
