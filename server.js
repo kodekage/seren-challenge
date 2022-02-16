@@ -127,7 +127,7 @@ app.get('/response/:userName', async (req, res) => {
                 },
                 {
                     question: 'What are your favorite hobbies?',
-                    answer: user.hobby
+                    answer: user.hobbies
                 },
             ]
         }
