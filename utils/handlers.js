@@ -1,6 +1,6 @@
 const pinoLogger = require("../config/logger");
 const ResponseModel = require("../models/response.model");
-const { Hobby } = require("./enums");
+const { Hobby, CallbackTypes } = require("./enums");
 
 class ResponseHandlers {
     constructor(slackWeb = null, payload = null) {
@@ -12,14 +12,15 @@ class ResponseHandlers {
 
     async handleUserHobbyResponse() {
         const user = this.responseModel.findOne({ userId: this.payload.user.id })
-        this.logger.info({ message: 'SELECTED HOOBY OPTION', hobby: this.payload.actions[0].selected_options[0].value })
+        this.logger.info({ message: 'SELECTED HOOBY OPTION', hobby: this.payload.actions[0].selected_options })
 
         if (user) {
-            this.logger.info('Updating user hobby...')
-            await this.responseModel.updateOne({ userId: this.payload.user.id }, { hobby: this.payload.actions[0].selected_options[0].value })
+            this.logger.info('Updating user hobbies...')
+            const selectedHobbies = this.payload.actions[0].selected_options.map(option => option.value)
+            await this.responseModel.updateOne({ userId: this.payload.user.id }, { hobbies: selectedHobbies })
         }
 
-        this.logger.info('Updated user hobby')
+        this.logger.info('Updated user hobbies')
         this.slack.chat.postMessage({
             channel: this.payload.channel.id,
             text: "thank you",
@@ -30,138 +31,87 @@ class ResponseHandlers {
         const userFavoriteHobbiesMessageMenuQuestion = {
             channel: this.payload.channel.id,
             text: "What are your favorite hobbies?",
-            "blocks": [
+            attachments: [
                 {
-                    "type": "section",
-                    "text": {
-                        "type": "mrkdwn",
-                        "text": "Test block with multi static select"
-                    },
-                    "accessory": {
-                        "type": "multi_static_select",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Select options",
-                            "emoji": true
-                        },
-                        "options": [
-                            {
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "*this is plain_text text*",
-                                    "emoji": true
-                                },
-                                "value": "value-0"
+                    color: "#f2c744",
+                    blocks: [
+                        {
+                            type: "section",
+                            text: {
+                                type: "mrkdwn",
+                                text: "You can select multiple hobbies"
                             },
-                            {
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "*this is plain_text text*",
-                                    "emoji": true
+                            accessory: {
+                                type: "multi_static_select",
+                                placeholder: {
+                                    type: "plain_text",
+                                    text: "Select hobbies",
+                                    emoji: true
                                 },
-                                "value": "value-1"
-                            },
-                            {
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "*this is plain_text text*",
-                                    "emoji": true
-                                },
-                                "value": "value-2"
+                                options: [
+                                    {
+                                        text: {
+                                            type: "plain_text",
+                                            text: Hobby.FOOTBALL,
+                                            emoji: true
+                                        },
+                                        value: Hobby.FOOTBALL
+                                    },
+                                    {
+                                        text: {
+                                            type: "plain_text",
+                                            text: Hobby.MUSIC,
+                                            emoji: true
+                                        },
+                                        value: Hobby.MUSIC
+                                    },
+                                    {
+                                        text: {
+                                            type: "plain_text",
+                                            text: Hobby.MOVIES,
+                                            emoji: true
+                                        },
+                                        value: Hobby.MOVIES
+                                    },
+                                    {
+                                        text: {
+                                            type: "plain_text",
+                                            text: Hobby.SLEEP,
+                                            emoji: true
+                                        },
+                                        value: Hobby.SLEEP
+                                    },
+                                    {
+                                        text: {
+                                            type: "plain_text",
+                                            text: Hobby.BASKETBALL,
+                                            emoji: true
+                                        },
+                                        value: Hobby.BASKETBALL
+                                    },
+                                ],
+                                action_id: CallbackTypes.USER_HOBBY
                             }
-                        ],
-                        "action_id": "multi_static_select-action"
-                    }
+                        }
+                    ]
                 }
             ]
-            // response_type: "in_channel",
-            // attachments: [
-            //     {
-            //         text: "Choose your favorite hobby",
-            //         fallback: "If you could read this message, you'd be choosing something fun to do right now.",
-            //         color: "#3AA3E3",
-            //         attachment_type: "default",
-            //         callback_id: "hobby_selection",
-            //         actions: [
-            //             {
-            //                 "action_id": "text1234",
-            //                 "type": "multi_static_select",
-            //                 "placeholder": {
-            //                   "type": "plain_text",
-            //                   "text": "Select items"
-            //                 },
-            //                 "options": [
-            //                   {
-            //                     "text": {
-            //                       "type": "plain_text",
-            //                       "text": "*this is plain_text text*"
-            //                     },
-            //                     "value": "value-0"
-            //                   },
-            //                   {
-            //                     "text": {
-            //                       "type": "plain_text",
-            //                       "text": "*this is plain_text text*"
-            //                     },
-            //                     "value": "value-1"
-            //                   },
-            //                   {
-            //                     "text": {
-            //                       "type": "plain_text",
-            //                       "text": "*this is plain_text text*"
-            //                     },
-            //                     "value": "value-2"
-            //                   }
-            //                 ]
-            //             }
-            //         ]
-                    // actions: [
-                    //     {
-                    //         name: "hobby_list",
-                    //         text: "What is your favorite hobby?",
-                    //         type: "select",
-                    //         options: [
-                    //             {
-                    //                 "text": "Football",
-                    //                 "value": Hobby.FOOTBALL
-                    //             },
-                    //             {
-                    //                 "text": "Music",
-                    //                 "value": Hobby.MUSIC
-                    //             },
-                    //             {
-                    //                 "text": "Sleep",
-                    //                 "value": Hobby.SLEEP
-                    //             },
-                    //             {
-                    //                 "text": "Movies",
-                    //                 "value": Hobby.MOVIES
-                    //             },
-                    //             {
-                    //                 "text": "Basketball",
-                    //                 "value": Hobby.BASKETBALL
-                    //             }
-                    //         ]
-                    //     }
-            //         // ]
-            //     }
-            // ]
         }
         this.logger.info({ message: 'User Hobby Menu Questions', userFavoriteHobbiesMessageMenuQuestion })
 
-        // const user = this.responseModel.findOne({ userId: this.payload.user.id })
-        this.logger.info({ message: 'SELECTED MODE OPTION', mood: this.payload.actions[0].selected_options})
+        const user = this.responseModel.findOne({ userId: this.payload.user.id })
+        this.logger.info({ message: 'SELECTED MODE OPTION', mood: this.payload.actions[0].selected_option })
 
-        // if (user) {
-        //     this.logger.info('Updating user mode...')
-        //     await this.responseModel.updateOne({ userId: this.payload.user.id }, { mood: this.payload.actions[0].selected_options[0].value })
-        // }
+        if (user) {
+            this.logger.info('Updating user mode...')
+            await this.responseModel.updateOne({ userId: this.payload.user.id }, { mood: this.payload.actions[0].selected_option.value })
+        }
 
-        // this.logger.info('Updated user mode')
+        this.logger.info('Updated user mode')
         this.slack.chat.postMessage(userFavoriteHobbiesMessageMenuQuestion);
     }
 
-    handleDefaultResponse () {
+    async handleDefaultResponse () {
         this.slack.chat.postMessage({
             channel: this.payload.channel.id,
             text: "thank you",

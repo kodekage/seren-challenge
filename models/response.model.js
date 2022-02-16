@@ -7,7 +7,7 @@ const Response = () => {
       userId: { type: String, unique: true },
       userName: { type: String },
       mood: { type: String },
-      hobby: { type: String },
+      hobbies: { type: [String] },
     }, {
       timestamps: true
     });
