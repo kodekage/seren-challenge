@@ -5,15 +5,18 @@ const { Mood, CallbackTypes } = require('./utils/enums')
 const ResponseHandlers = require('./utils/handlers')
 const ResponseModel = require('./models/response.model')
 const mongoConnection = require('./config/mongoose')
+const pinoLogger = require('./config/logger')
 
 const app = express()
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
+const logger = pinoLogger.logger
 // Initialize Slack Web Client
 const web = new WebClient(process.env.SLACK_BOT_TOKEN)
 // Connect to Mongo Atlas
 mongoConnection()
 
 app.use(express.urlencoded({ extended: true}))
+app.use(pinoLogger)
 
 app.get('/', async (req, res) => {
     try {
@@ -22,7 +25,8 @@ app.get('/', async (req, res) => {
         await response.save()
         res.end('Welcome to the Seren bot');
     } catch (error) {
-        console.log(error)
+        logger.error({ message: error.message })
+        res.status(400).json({ status: 400, message: error.message })
     }
 })
 
@@ -32,26 +36,26 @@ app.post('/respond', (req, res) => {
 
     switch(payload.callback_id) {
         case CallbackTypes.USER_MOOD:
-            responseHandlers.handleUserModeResponse().catch(error => console.log(error))
+            responseHandlers.handleUserModeResponse().catch(error => logger.error({ message: 'Error', error }))
             return res.end()
         case CallbackTypes.USER_HOBBY:
-            responseHandlers.handleUserHobbyResponse().catch(error => console.log(error))
+            responseHandlers.handleUserHobbyResponse().catch(error => logger.error({ message: 'Error', error }))
             return res.end()
         default:
-            responseHandlers.handleDefaultResponse().catch(error => console.log(error))
+            responseHandlers.handleDefaultResponse().catch(error => logger.error({ message: 'Error', error }))
             return res.end()
     }
 })
 
 app.post('/messages', async (req, res) => {
-    console.log('POST MESSAGES ', req.body)
+    logger.info({ message: 'Bot Received a message', body: req.body })
 
     if (req.body.text !== 'hello') {
         return res.end(`Hi <@${req.body.user_id}>, to interact with me, you need to send 'Hello' messge`)
     }
     
     const user = await ResponseModel.findOne({ userId: req.body.user_id }).exec()
-    console.log('\nUser ---> ', user, '\n');
+    logger.info({ message: 'User', user })
 
     if (!user) {
         const response = new ResponseModel({ userId: req.body.user_id , userName: req.body.user_name })
@@ -94,6 +98,7 @@ app.post('/messages', async (req, res) => {
         ]
     }
 
+    logger.info({ message: 'User Mood Menu Questions', userMoodMenuQuestion })
     web.chat.postMessage(userMoodMenuQuestion);
     
     res.end()

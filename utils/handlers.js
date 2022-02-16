@@ -1,3 +1,4 @@
+const pinoLogger = require("../config/logger");
 const ResponseModel = require("../models/response.model");
 const { Hobby } = require("./enums");
 
@@ -6,16 +7,19 @@ class ResponseHandlers {
         this.payload = payload
         this.slack = slackWeb
         this.responseModel = ResponseModel
+        this.logger = pinoLogger.logger
     }
 
     async handleUserHobbyResponse() {
         const user = this.responseModel.findOne({ userId: this.payload.user.id })
+        this.logger.info({ message: 'SELECTED HOOBY OPTION', hobby: this.payload.actions[0].selected_options[0].value })
 
         if (user) {
-            console.log('SELECTED HOOBY OPTION -> ', this.payload.actions[0].selected_options[0].value)
+            this.logger.info('Updating user hobby...')
             await this.responseModel.updateOne({ userId: this.payload.user.id }, { hobby: this.payload.actions[0].selected_options[0].value })
         }
 
+        this.logger.info('Updated user hobby')
         this.slack.chat.postMessage({
             channel: this.payload.channel.id,
             text: "thank you",
@@ -66,13 +70,17 @@ class ResponseHandlers {
                 }
             ]
         }
+        this.logger.info({ message: 'User Hobby Menu Questions', userFavoriteHobbiesMessageMenuQuestion })
+
         const user = this.responseModel.findOne({ userId: this.payload.user.id })
+        this.logger.info({ message: 'SELECTED MODE OPTION', mood: this.payload.actions[0].selected_options[0].value})
 
         if (user) {
-            console.log('SELECTED MOOD OPTION -> ', this.payload.actions[0].selected_options[0].value)
+            this.logger.info('Updating user mode...')
             await this.responseModel.updateOne({ userId: this.payload.user.id }, { mood: this.payload.actions[0].selected_options[0].value })
         }
 
+        this.logger.info('Updated user mode')
         this.slack.chat.postMessage(userFavoriteHobbiesMessageMenuQuestion);
     }
 
