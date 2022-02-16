@@ -7,13 +7,14 @@ const Hobby = {
 }
 
 const Mood = {
-    FEELING_WELL: 'feeling_well',
-    FEELING_NEUTRAL: 'feeling_neutral',
-    FEELING_LUCKY: 'feeling_lucky'
+    FEELING_WELL: 'feeling well',
+    FEELING_NEUTRAL: 'feeling neutral',
+    FEELING_LUCKY: 'feeling lucky'
 }
 
 const CallbackTypes = {
-    USER_MOOD: 'user_mood'
+    USER_MOOD: 'user_mood',
+    USER_HOBBY: 'hobby_selection'
 }
 
 module.exports = { Hobby, Mood, CallbackTypes }

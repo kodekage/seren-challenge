@@ -1,14 +1,28 @@
+const ResponseModel = require("../models/response.model");
 const { Hobby } = require("./enums");
 
-class Handlers {
-    constructor(slackWeb, payload) {
+class ResponseHandlers {
+    constructor(slackWeb = null, payload = null) {
         this.payload = payload
         this.slack = slackWeb
-
-        console.log('PAYLOAD: ', payload)
+        this.responseModel = ResponseModel
     }
 
-    handleUserModeResponse() {
+    async handleUserHobbyResponse() {
+        const user = this.responseModel.findOne({ userId: this.payload.user.id })
+
+        if (user) {
+            console.log('SELECTED HOOBY OPTION -> ', this.payload.actions[0].selected_options[0].value)
+            await this.responseModel.updateOne({ userId: this.payload.user.id }, { hobby: this.payload.actions[0].selected_options[0].value })
+        }
+
+        this.slack.chat.postMessage({
+            channel: this.payload.channel.id,
+            text: "thank you",
+        })
+    }
+
+    async handleUserModeResponse() {
         const userFavoriteHobbiesMessageMenuQuestion = {
             channel: this.payload.channel.id,
             text: "What are your favorite hobbies?",
@@ -52,6 +66,12 @@ class Handlers {
                 }
             ]
         }
+        const user = this.responseModel.findOne({ userId: this.payload.user.id })
+
+        if (user) {
+            console.log('SELECTED MOOD OPTION -> ', this.payload.actions[0].selected_options[0].value)
+            await this.responseModel.updateOne({ userId: this.payload.user.id }, { mood: this.payload.actions[0].selected_options[0].value })
+        }
 
         this.slack.chat.postMessage(userFavoriteHobbiesMessageMenuQuestion);
     }
@@ -62,7 +82,6 @@ class Handlers {
             text: "thank you",
         })
     }
-
 }
 
-module.exports = Handlers
+module.exports = ResponseHandlers

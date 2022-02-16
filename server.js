@@ -1,37 +1,62 @@
 require('dotenv').config()
 const express = require('express')
-const { WebClient } = require('@slack/web-api');
-const { Mood, CallbackTypes } = require('./utils/enums');
-const Handlers = require('./utils/handlers');
-
+const { WebClient } = require('@slack/web-api')
+const { Mood, CallbackTypes } = require('./utils/enums')
+const ResponseHandlers = require('./utils/handlers')
+const ResponseModel = require('./models/response.model')
+const mongoConnection = require('./config/mongoose')
 
 const app = express()
 const port = process.env.PORT || 3000;
 // Initialize Slack Web Client
 const web = new WebClient(process.env.SLACK_BOT_TOKEN)
+// Connect to Mongo Atlas
+mongoConnection()
 
 app.use(express.urlencoded({ extended: true}))
 
-app.get('/', (req, res) => {
-    res.end('Welcome to the Seren bot');
+app.get('/', async (req, res) => {
+    try {
+        const response = new ResponseModel({ userId: '123', userName: 'prosper', mood: 'happy', hobby: 'sleep' })
+
+        await response.save()
+        res.end('Welcome to the Seren bot');
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 app.post('/respond', (req, res) => {
     const payload = JSON.parse(req.body.payload)
-    const handlers = new Handlers(web, payload)
+    const responseHandlers = new ResponseHandlers(web, payload)
 
     switch(payload.callback_id) {
         case CallbackTypes.USER_MOOD:
-            handlers.handleUserModeResponse()
+            responseHandlers.handleUserModeResponse().catch(error => console.log(error))
+            return res.end()
+        case CallbackTypes.USER_HOBBY:
+            responseHandlers.handleUserHobbyResponse().catch(error => console.log(error))
             return res.end()
         default:
-            handlers.handleDefaultResponse()
+            responseHandlers.handleDefaultResponse().catch(error => console.log(error))
             return res.end()
     }
 })
 
 app.post('/messages', async (req, res) => {
     console.log('POST MESSAGES ', req.body)
+
+    if (req.body.text !== 'hello') {
+        return res.end(`Hi <@${req.body.user_id}>, to interact with me, you need to send 'Hello' messge`)
+    }
+    
+    const user = await ResponseModel.findOne({ userId: req.body.user_id }).exec()
+    console.log('\nUser ---> ', user, '\n');
+
+    if (!user) {
+        const response = new ResponseModel({ userId: req.body.user_id , userName: req.body.user_name })
+        await response.save()
+    }
 
     const userMoodMenuQuestion = {
         channel: req.body.channel_id,
