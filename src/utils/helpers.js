@@ -1,7 +1,4 @@
 /* eslint-disable no-undef */
-
-const { Hobby, Mood } = require("./enums");
-
 /* eslint-disable no-useless-escape*/
 const mockResponse = () => {
   const res = {};
