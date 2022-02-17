@@ -2,16 +2,16 @@ const pino = require("pino");
 const pinoLogger = require("pino-http")({
   // Reuse an existing logger instance
   logger: pino({
-        redact: [
-            "body.token",
-            "body.user_id",
-            "body.user_name",
-            "user.userId",
-        ],
-        prettyPrint: {
-        levelFirst: true
-        }
-    }),
+    redact: [
+      "body.token",
+      "body.user_id",
+      "body.user_name",
+      "user.userId",
+    ],
+    prettyPrint: {
+      levelFirst: true
+    }
+  }),
 
   // Define a custom request id function
   genReqId: function (req) { return req.id; },
