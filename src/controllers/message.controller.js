@@ -3,22 +3,33 @@ const pinoLogger = require("../config/logger");
 const ResponseModel = require("../models/response.model");
 const { Mood, CallbackTypes } = require("../utils/enums");
 
+/**
+ * Request handler function for incoming request to the message
+ * endpoint
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns string
+ */
 const messageController = async (req, res) => {
-  const logger = pinoLogger.logger;
+  const logger = pinoLogger;
   //init slack web api
   const web = new WebClient(process.env.SLACK_BOT_TOKEN);
   logger.info({ message: "Bot Received a message", body: req.body });
 
   if (req.body.text !== "hello") {
+    logger.warn({ message: "Command test not hello", text: req.body.text });
     return res.end(`Hi <@${req.body.user_id}>, to interact with me, you need to send 'Hello' messge`);
   }
     
   const user = await ResponseModel.findOne({ userId: req.body.user_id }).exec();
-  logger.info({ message: "User", user });
+  logger.debug({ message: "Found user", user });
 
   if (!user) {
+    logger.info({ message: "Saving new user data to DB"});
     const response = new ResponseModel({ userId: req.body.user_id , userName: req.body.user_name });
     await response.save();
+    logger.info({ message: "New user data saved in DB"});
   }
 
   const userMoodMenuQuestion = {
@@ -75,7 +86,7 @@ const messageController = async (req, res) => {
     ]
   };
 
-  logger.info({ message: "User Mood Menu Questions", userMoodMenuQuestion });
+  logger.debug({ message: "User Mood Menu Questions", userMoodMenuQuestion });
   web.chat.postMessage(userMoodMenuQuestion);
     
   res.end();

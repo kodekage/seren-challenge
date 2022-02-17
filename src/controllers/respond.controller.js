@@ -3,8 +3,16 @@ const pinoLogger = require("../config/logger");
 const { CallbackTypes } = require("../utils/enums");
 const ResponseHandlers = require("../utils/handlers");
 
+/**
+ * Request handler function for incoming request to the respond
+ * endpoint
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const respondController = (req, res) => {
-  const logger = pinoLogger.logger;
+  const logger = pinoLogger;
   // parse payload to object 
   const payload = JSON.parse(req.body.payload);
   //init slack web api

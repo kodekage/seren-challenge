@@ -2,14 +2,23 @@ const pinoLogger = require("../config/logger");
 const ResponseModel = require("../models/response.model");
 const { Hobby, CallbackTypes } = require("./enums");
 
+/**
+ * ResponseHandler has the responsibility of handling the response
+ * to the bots questions on slack
+ */
 class ResponseHandlers {
   constructor(slackWeb = null, payload = null) {
     this.payload = payload;
     this.slack = slackWeb;
     this.responseModel = ResponseModel;
-    this.logger = pinoLogger.logger;
+    this.logger = pinoLogger;
   }
 
+  /**
+   * Handles response to the hobby questions by fetching the response,
+   * logging, persisting to mongo and finally sending the user a 'thank you'
+   * message in the channel the interaction started.
+   */
   async handleUserHobbyResponse() {
     const user = this.responseModel.findOne({ userId: this.payload.user.id });
     this.logger.info({ message: "SELECTED HOOBY OPTION", hobby: this.payload.actions[0].selected_options });
@@ -27,6 +36,10 @@ class ResponseHandlers {
     });
   }
 
+  /**
+   * Handles response to the user mood questions. Follows the same patten
+   * like the handleUserHobbyResponse method
+   */
   async handleUserModeResponse() {
     const userFavoriteHobbiesMessageMenuQuestion = {
       channel: this.payload.channel.id,
@@ -97,7 +110,7 @@ class ResponseHandlers {
         }
       ]
     };
-    this.logger.info({ message: "User Hobby Menu Questions", userFavoriteHobbiesMessageMenuQuestion });
+    this.logger.debug({ message: "User Hobby Menu Questions", userFavoriteHobbiesMessageMenuQuestion });
 
     const user = this.responseModel.findOne({ userId: this.payload.user.id });
     this.logger.info({ message: "SELECTED MODE OPTION", mood: this.payload.actions[0].selected_option });
@@ -111,6 +124,9 @@ class ResponseHandlers {
     this.slack.chat.postMessage(userFavoriteHobbiesMessageMenuQuestion);
   }
 
+  /**
+   * This is a generic response handler
+   */
   async handleDefaultResponse () {
     this.slack.chat.postMessage({
       channel: this.payload.channel.id,
