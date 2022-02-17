@@ -11,7 +11,7 @@ mongoConnection();
 app.use(express.urlencoded({ extended: true}));
 
 app.get("/", async (req, res) => {
-    res.end("Welcome to the Seren bot");
+  res.end("Welcome to the Seren bot");
 });
 
 app.post("/respond", respondController);

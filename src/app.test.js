@@ -23,8 +23,8 @@ jest.mock("./models/response.model", () => {
 });
 jest.mock("./config/logger", () => {
   const logger = {
-      info(){ return  jest.fn(); },
-      error(){ return jest.fn(); }
+    info(){ return  jest.fn(); },
+    error(){ return jest.fn(); }
   };
   return { logger };
 });
@@ -40,9 +40,9 @@ jest.mock("@slack/web-api", () => {
 
 describe("App", () => {
 
-    beforeAll(() => {
-      mongoose.mockImplementation(() => jest.fn());
-    });
+  beforeAll(() => {
+    mongoose.mockImplementation(() => jest.fn());
+  });
 
   test("Root endpoint should return 200 status code", async () => {
     return request(app)
@@ -57,16 +57,16 @@ describe("App", () => {
       .then(response => {
         expect(response.body.data).toEqual({
           response: [
-          {
-            question: "How are you feeling",
-            answer: "neutral"
-          },
-          {
-            question: "What are your favorite hobbies?",
-            answer: [
-              "football",
-              "sleep"
-            ]
+            {
+              question: "How are you feeling",
+              answer: "neutral"
+            },
+            {
+              question: "What are your favorite hobbies?",
+              answer: [
+                "football",
+                "sleep"
+              ]
             }
           ]
         });
