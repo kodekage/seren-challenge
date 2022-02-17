@@ -2,6 +2,7 @@
 const { WebClient } = require("@slack/web-api");
 const { messageController } = require("../app");
 const mongoose = require("../config/mongoose");
+const { mockRequest, mockResponse } = require("../utils/helpers");
 
 jest.mock("../config/mongoose");
 jest.mock("../models/response.model", () => {
@@ -35,21 +36,6 @@ jest.mock("@slack/web-api", () => {
   };
   return { WebClient: jest.fn(() => mSlack) };
 });
-
-const mockResponse = () => {
-  const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  res.end = jest.fn().mockReturnValue(res);
-  return res;
-};
-
-const mockRequest = (body, payload) => {
-  return {
-    body,
-    payload
-  };
-};
 
 describe("MessageController", () => {
   let slack;
@@ -119,7 +105,7 @@ describe("MessageController", () => {
         }
       ]
     };
-    const req = mockRequest(body, null);
+    const req = mockRequest(body);
     const res = mockResponse();
 
     await messageController(req, res);
@@ -136,7 +122,7 @@ describe("MessageController", () => {
       "text": "hi"
     };
 
-    const req = mockRequest(body, null);
+    const req = mockRequest(body);
     const res = mockResponse();
 
     await messageController(req, res);
