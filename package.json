@@ -1,7 +1,7 @@
 {
   "name": "seren-challenge",
   "version": "1.0.0",
-  "description": "",
+  "description": "Slack bot for getting slack user mood and hobbies",
   "main": "server.js",
   "scripts": {
     "start:dev": "nodemon server.js",
@@ -14,8 +14,8 @@
     "type": "git",
     "url": "git@me.github.com:kodekage/seren-challenge.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["slack", "app", "bot", "productivity"],
+  "author": "Prosper Opara",
   "license": "ISC",
   "dependencies": {
     "@slack/web-api": "^6.6.0",
