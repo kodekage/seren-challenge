@@ -4,27 +4,27 @@ const { Hobby, CallbackTypes } = require("./enums");
 
 class ResponseHandlers {
     constructor(slackWeb = null, payload = null) {
-        this.payload = payload
-        this.slack = slackWeb
-        this.responseModel = ResponseModel
-        this.logger = pinoLogger.logger
+        this.payload = payload;
+        this.slack = slackWeb;
+        this.responseModel = ResponseModel;
+        this.logger = pinoLogger.logger;
     }
 
     async handleUserHobbyResponse() {
-        const user = this.responseModel.findOne({ userId: this.payload.user.id })
-        this.logger.info({ message: 'SELECTED HOOBY OPTION', hobby: this.payload.actions[0].selected_options })
+        const user = this.responseModel.findOne({ userId: this.payload.user.id });
+        this.logger.info({ message: "SELECTED HOOBY OPTION", hobby: this.payload.actions[0].selected_options });
 
         if (user) {
-            this.logger.info('Updating user hobbies...')
-            const selectedHobbies = this.payload.actions[0].selected_options.map(option => option.value)
-            await this.responseModel.updateOne({ userId: this.payload.user.id }, { hobbies: selectedHobbies })
+            this.logger.info("Updating user hobbies...");
+            const selectedHobbies = this.payload.actions[0].selected_options.map(option => option.value);
+            await this.responseModel.updateOne({ userId: this.payload.user.id }, { hobbies: selectedHobbies });
         }
 
-        this.logger.info('Updated user hobbies')
+        this.logger.info("Updated user hobbies");
         this.slack.chat.postMessage({
             channel: this.payload.channel.id,
             text: "thank you",
-        })
+        });
     }
 
     async handleUserModeResponse() {
@@ -96,18 +96,18 @@ class ResponseHandlers {
                     ]
                 }
             ]
-        }
-        this.logger.info({ message: 'User Hobby Menu Questions', userFavoriteHobbiesMessageMenuQuestion })
+        };
+        this.logger.info({ message: "User Hobby Menu Questions", userFavoriteHobbiesMessageMenuQuestion });
 
-        const user = this.responseModel.findOne({ userId: this.payload.user.id })
-        this.logger.info({ message: 'SELECTED MODE OPTION', mood: this.payload.actions[0].selected_option })
+        const user = this.responseModel.findOne({ userId: this.payload.user.id });
+        this.logger.info({ message: "SELECTED MODE OPTION", mood: this.payload.actions[0].selected_option });
 
         if (user) {
-            this.logger.info('Updating user mode...')
-            await this.responseModel.updateOne({ userId: this.payload.user.id }, { mood: this.payload.actions[0].selected_option.value })
+            this.logger.info("Updating user mode...");
+            await this.responseModel.updateOne({ userId: this.payload.user.id }, { mood: this.payload.actions[0].selected_option.value });
         }
 
-        this.logger.info('Updated user mode')
+        this.logger.info("Updated user mode");
         this.slack.chat.postMessage(userFavoriteHobbiesMessageMenuQuestion);
     }
 
@@ -115,8 +115,8 @@ class ResponseHandlers {
         this.slack.chat.postMessage({
             channel: this.payload.channel.id,
             text: "thank you",
-        })
+        });
     }
 }
 
-module.exports = ResponseHandlers
+module.exports = ResponseHandlers;

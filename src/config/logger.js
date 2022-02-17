@@ -1,12 +1,12 @@
-const pino = require('pino')
-const pinoLogger = require('pino-http')({
+const pino = require("pino");
+const pinoLogger = require("pino-http")({
   // Reuse an existing logger instance
   logger: pino({
         redact: [
-            'body.token',
-            'body.user_id',
-            'body.user_name',
-            'user.userId',
+            "body.token",
+            "body.user_id",
+            "body.user_name",
+            "user.userId",
         ],
         prettyPrint: {
         levelFirst: true
@@ -14,7 +14,7 @@ const pinoLogger = require('pino-http')({
     }),
 
   // Define a custom request id function
-  genReqId: function (req) { return req.id },
+  genReqId: function (req) { return req.id; },
 
   // Define custom serializers
   serializers: {
@@ -27,31 +27,31 @@ const pinoLogger = require('pino-http')({
   wrapSerializers: true,
 
   // Logger level is `info` by default
-  useLevel: 'debug',
+  useLevel: "debug",
 
   // Define a custom success message
   customSuccessMessage: function (res) {
     if (res.statusCode === 404) {
-      return 'resource not found'
+      return "resource not found";
     }
-    return 'request completed'
+    return "request completed";
   },
 
   // Define a custom receive message
-  customReceivedMessage: function (req, _res) {
-    return 'request received: ' + req.method
+  customReceivedMessage: function (req) {
+    return "request received: " + req.method;
   },
 
   // Define a custom error message
   customErrorMessage: function (error, res) {
-    return 'request errored with status code: ' + res.statusCode
+    return "request errored with status code: " + res.statusCode;
   },
   // Override attribute keys for the log object
   customAttributeKeys: {
-    req: 'request',
-    res: 'response',
-    err: 'error',
-    responseTime: 'timeTaken'
+    req: "request",
+    res: "response",
+    err: "error",
+    responseTime: "timeTaken"
   },
 
   // Define additional custom request properties
@@ -60,8 +60,8 @@ const pinoLogger = require('pino-http')({
       customProp: req.customProp,
       // user request-scoped data is in res.locals for express applications
       customProp2: res.locals.myCustomData
-    }
+    };
   }
-})
+});
 
-module.exports = pinoLogger
+module.exports = pinoLogger;

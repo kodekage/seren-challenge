@@ -1,6 +1,3 @@
-_metadata:
-  major_version: 1
-  minor_version: 1
 display_information:
   name: seren
 features:
@@ -12,14 +9,14 @@ features:
     display_name: seren
     always_online: true
   slash_commands:
-    - command: /seren
-      url: https://ed57-197-210-227-193.ngrok.io/messages # e.g. https://bot.herokuapp.com/messages
+    - command: /bot
+      url: https://seren-bot-app.herokuapp.com/messages
       description: Initiate a conversation with the bot
-      usage_hint: "hello"
+      usage_hint: hello
       should_escape: false
 oauth_config:
   redirect_urls:
-    - https://ed57-197-210-227-193.ngrok.io/auth/callback # e.g. https://bot.herokuapp.com/auth/callback
+    - https://seren-bot-app.herokuapp.com/auth/callback
   scopes:
     user:
       - channels:read
@@ -53,7 +50,7 @@ oauth_config:
 settings:
   interactivity:
     is_enabled: true
-    request_url: https://ed57-197-210-227-193.ngrok.io/response # e.g. https://bot.herokuapp.com/messages
+    request_url: https://seren-bot-app.herokuapp.com/respond
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
