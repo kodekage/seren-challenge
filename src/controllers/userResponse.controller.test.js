@@ -33,7 +33,7 @@ describe("userResponseController", () => {
   });
 
 
-  test("Should return successfully when correct user params is passed", async() => {
+  test("Should return status code 200 and json payload when correct user params is passed", async() => {
     const param = { params: { userName: "prosper" }};
     const req = mockRequest(null, param);
     const res = mockResponse();

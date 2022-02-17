@@ -42,7 +42,7 @@ describe("respondController", () => {
   });
 
 
-  test("Should call handler when correct payload is pass", async() => {
+  test("Should call handler when correct payload is passed", async() => {
     const body = {
       payload: moodPayload,
     };

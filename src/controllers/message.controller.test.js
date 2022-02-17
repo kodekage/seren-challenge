@@ -45,7 +45,7 @@ describe("MessageController", () => {
     slack = new WebClient();
   });
 
-  test("Should respond null when 'hello' message is sent", async() => {
+  test("Should send empty response when 'hello' text is in request body", async() => {
     const body = {
       "channel_id": "C033XMZN9CH",
       "channel_name": "intro",
@@ -114,7 +114,7 @@ describe("MessageController", () => {
     expect(slack.chat.postMessage).toBeCalledWith(chat);
   });
 
-  test("Should respond when 'hello' message is sent", async() => {
+  test("Should instruct user to send a hello text if 'hello' text is not in request body", async() => {
     const body = {
       "channel_id": "C033XMZN9CH",
       "channel_name": "intro",
