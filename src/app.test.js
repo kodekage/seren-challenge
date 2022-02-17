@@ -24,9 +24,11 @@ jest.mock("./models/response.model", () => {
 jest.mock("./config/logger", () => {
   const logger = {
     info(){ return  jest.fn(); },
-    error(){ return jest.fn(); }
+    error(){ return jest.fn(); },
+    debug(){ return jest.fn(); },
+    warn() { return jest.fn(); }
   };
-  return { logger };
+  return logger;
 });
 
 jest.mock("@slack/web-api", () => {
