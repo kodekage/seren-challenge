@@ -7,3 +7,7 @@ This slackbot is hosted on Heroku - https://seren-bot-app.herokuapp.com
 - Copy the contents in `.env.sample` into a `.env` file and add the values accordingly
 - Run `npm install` to install the project dependencies
 - Run `npm start` to start the bot server
+
+### Bot Manifest
+
+In the root folder you'll find a `manifest.yml` file. This file contains the bot configurations
